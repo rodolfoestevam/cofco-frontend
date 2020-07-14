@@ -32,6 +32,7 @@ export class AuthService {
 
   loginWithUserCredentials(username: string, password: string): Observable<any> {
     let headers = new HttpHeaders();
+    let session;
     headers = headers.set('Content-Type', 'application/x-www-form-urlencoded');
 
     const body = new URLSearchParams();
@@ -45,7 +46,11 @@ export class AuthService {
     return this.http.post(HttpApi.oauthLogin, body.toString(), { headers })
       .pipe(
         map((response: any) => {
-          localStorage.setItem('session', JSON.stringify(response));
+          session = {
+            ...response,
+            username
+          }
+          localStorage.setItem('session', JSON.stringify(session));
           return response;
         })
       );
